@@ -12,10 +12,19 @@ def check_disk_full(disk, min_gb, min_percent):
 def check_root_full():
     """Returns True if the root partition is full, False otherwise."""
     return check_disk_full(disk="/", min_gb=2, min_percent=10)
+def check_no_netowrk():
+    """Returns True if it fails to resolve Google's URL, False otherwise."""
+    try:
+        # Attempt to connect to a well-known host
+        socket.create_connection(("www.google.com", 80))
+        return False
+    except:
+        return True
 def main(): 
     checks=[
         (check_reboot, "Pending Reboot"),
         (check_root_full, "Root partition full"),
+        (check_no_netowrk, "No network connection"),
     ]
     everything_ok = True
     for check, message in checks:
